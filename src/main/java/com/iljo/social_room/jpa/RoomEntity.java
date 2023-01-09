@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 
-@Table(name="SOCIALROOM")
+@Table(name="socialRoom")
 @Entity
 @Data
 @DynamicInsert // Insert시 null값 제외하고 쿼리문 실행
