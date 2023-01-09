@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -112,8 +113,12 @@ public class RoomServiceImpl implements RoomService{
             File destination = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
             file.transferTo(destination);
 
+            String now = LocalTime.now().toString().replace(":","").replace(".","");
+
+            String fileName = now + file.getOriginalFilename();
+
             // 클라우드 버킷에 저장될 파일 이름 만들어주기
-            BlobId blobId = BlobId.of("iljo-room", destination.getAbsolutePath());
+            BlobId blobId = BlobId.of("iljo-room", fileName);
 
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                     .setAcl(new ArrayList<>(Arrays.asList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER))))
@@ -126,7 +131,7 @@ public class RoomServiceImpl implements RoomService{
             File file1 = new File(destination.getAbsolutePath());
             file1.delete();
 
-            return destination.getAbsolutePath();
+            return fileName;
 
         } catch (IOException e) {
             log.error(e.getMessage());
